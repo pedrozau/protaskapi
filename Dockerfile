@@ -1,9 +1,10 @@
 FROM node:20
 
-WORKDIR /usr/
+WORKDIR /usr/src/app
 
 
 COPY package*.json ./
+COPY prisma ./prisma/
 
 
 

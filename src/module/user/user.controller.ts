@@ -1,0 +1,62 @@
+import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { UserService } from './user.service';
+import { UserDTO } from '../DTO/user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import multer, { diskStorage } from 'multer';
+import { extname } from 'path';
+
+@Controller('user')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+ 
+  
+
+  @Post('account')
+  async createAccount(@Body() data: UserDTO) {
+      return await  this.userService.createAccount(data)
+  }
+   
+  @Get('account')
+  async getAll() {
+   
+     return await this.userService.getAll() 
+
+  }
+  
+  @Get('account/:id')
+  async getOne(@Param('id')  id: string) {
+
+        return await this.userService.getUserOne(id)
+
+  }
+  
+
+  @Put('account/:id')
+  @UseInterceptors(FileInterceptor('file',{
+    storage: diskStorage({
+      destination: './files',
+      filename: (req, file,callback) => {
+         const uniqueSuffix = Date.now() + '-' + Math.floor(Math.random() * 1e9)
+         const ext = extname(file.originalname) 
+         const filename = `${file.originalname}-${uniqueSuffix}${ext}` 
+
+         callback(null,filename)
+      }
+    })
+  }))
+  async update(@UploadedFile() file:Express.Multer.File,@Body() {name,email,password,points}: UserDTO, @Param('id')  id: string) {
+
+      return await this.userService.updateAccount(
+        {
+          name,
+          email,
+          password,
+          points,
+          avatarUrl: file.filename,
+
+        },id
+      )
+  }
+  
+
+}

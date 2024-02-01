@@ -17,7 +17,7 @@ COPY . .
 
 RUN npm run build
 
-
+FROM node:20.11.0
 
 
 COPY --from=builder /app/node_modules ./node_modules

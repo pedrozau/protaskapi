@@ -1,8 +1,11 @@
 FROM node:20
 
-WORKDIR /usr/src/app
+WORKDIR /usr/
+
 
 COPY package*.json ./
+
+
 
 RUN npm install
 RUN npx prisma generate

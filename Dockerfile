@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:14 as builder
 
 WORKDIR /app
 
@@ -12,6 +12,10 @@ RUN npm install
 RUN npx prisma generate
 
 COPY . .
+
+RUN npm run build
+
+FROM node:14
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./

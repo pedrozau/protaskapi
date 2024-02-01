@@ -11,13 +11,13 @@ COPY prisma ./prisma/
 
 
 RUN npm install
-RUN npx prisma migrate dev --name init
+RUN npx prisma generate
 
 COPY . .
 
 RUN npm run build
 
-FROM node:20.11.0
+
 
 
 COPY --from=builder /app/node_modules ./node_modules

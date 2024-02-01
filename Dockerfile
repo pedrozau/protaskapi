@@ -1,4 +1,4 @@
-FROM node:14 as builder
+FROM node:18 as builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:14
+FROM node:18
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./

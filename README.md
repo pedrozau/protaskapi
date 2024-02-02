@@ -1,4 +1,3 @@
-<h1 style="align:center;margin:20px;">PROTASK</h1>
 
  <img style="align:center;margin:30px;" src="https://github.com/pedrozau/protaskapi/blob/master/Color%20logo%20with%20background.png">
 

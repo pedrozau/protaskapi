@@ -5,7 +5,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import multer, { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from './auth.guard';
+import { AuthDTO } from '../DTO/auth.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -48,7 +52,7 @@ export class UserController {
       }
     })
   }))
-  async update(@UploadedFile() file:Express.Multer.File,@Body() {name,email,password,points}: UserDTO, @Param('id')  id: string) {
+  async update(@UploadedFile() file: Express.Multer.File,@Body() {name,email,password,points}: UserDTO, @Param('id')  id: string) {
 
       return await this.userService.updateAccount(
         {
@@ -65,7 +69,7 @@ export class UserController {
   
 
   @Post('auth')
-  async signIn(@Body() data: UserDTO) {
+  async signIn(@Body() data: AuthDTO) {
 
     return await this.userService.auth(data)
 

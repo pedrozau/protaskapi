@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors()
-  const config = new DocumentBuilder()
+  const config = new DocumentBuilder().addBearerAuth()
   .setTitle('Protaskapi')
   .setDescription('The Protaskapi API description')
   .setVersion('1.0')

@@ -86,5 +86,17 @@ export class TaskService {
     
    }
 
+   async getbyid(taskId: string) {
+     try{
+         return await this.db.task.findFirst({
+             where: {
+                 id: taskId
+             }
+         })
+      }catch(e) {
+         throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+      }
+   }
+
 
 }

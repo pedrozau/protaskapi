@@ -15,175 +15,209 @@ export class UserService {
 
   
   async createAccount({ name, email, password }: UserDTO) {
-    const emailExist = await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
-    });
-
-    if (emailExist) {
-      throw new HttpException("user already existe", HttpStatus.BAD_REQUEST);
-    }
-
-    const passwordHash = await hash(password, 13);
-
-    return await this.prisma.user.create({
-          data: {
-            name,
+      try {
+        const emailExist = await this.prisma.user.findFirst({
+          where: {
             email,
-            password: passwordHash,
           },
         });
+    
+        if (emailExist) {
+          throw new HttpException("user already existe", HttpStatus.BAD_REQUEST);
+        }
+    
+        const passwordHash = await hash(password, 13);
+    
+        return await this.prisma.user.create({
+              data: {
+                name,
+                email,
+                password: passwordHash,
+              },
+            });
+
+      }catch(e) {
+        throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+      }
   }
 
   async updateAccount(
     { password, name, email, avatarUrl, points }: UserDTO,
     userId: string
   ) {
-    const idExiste = await this.prisma.user.findFirst({
-      where: {
-        id: userId,
-      },
-    });
 
-    if (!idExiste) {
-      throw new HttpException("id is invalid!", HttpStatus.BAD_REQUEST);
-    }
+     try {
 
-    if (!password) {
-      await this.prisma.user.update({
+      const idExiste = await this.prisma.user.findFirst({
         where: {
           id: userId,
         },
-        data: {
-          password: idExiste.password,
-          name: idExiste.name,
-          email: idExiste.email,
-          points: idExiste.points,
-          avatarUrl: idExiste.avatarUrl,
-        },
       });
-    }
+  
+      if (!idExiste) {
+        throw new HttpException("id is invalid!", HttpStatus.BAD_REQUEST);
+      }
+  
+      if (!password) {
+        await this.prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            password: idExiste.password,
+            name: idExiste.name,
+            email: idExiste.email,
+            points: idExiste.points,
+            avatarUrl: idExiste.avatarUrl,
+          },
+        });
+      }
+  
+      const passwordHash = await hash(password, 13);
+  
+      if (points) {
+        await this.prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            password: idExiste.password,
+            name: idExiste.name,
+            email: idExiste.email,
+            points,
+            avatarUrl: idExiste.avatarUrl,
+          },
+        });
+      } else {
+        await this.prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            password: passwordHash,
+            name: idExiste.name,
+            email: idExiste.email,
+            points,
+            avatarUrl: idExiste.avatarUrl,
+          },
+        });
+      }
+  
+      if (name || email || avatarUrl || points || password) {
+        await this.prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            name,
+            email,
+            password: passwordHash,
+            avatarUrl,
+            points,
+          },
+        });
+      }
 
-    const passwordHash = await hash(password, 13);
-
-    if (points) {
-      await this.prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          password: idExiste.password,
-          name: idExiste.name,
-          email: idExiste.email,
-          points,
-          avatarUrl: idExiste.avatarUrl,
-        },
-      });
-    } else {
-      await this.prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          password: passwordHash,
-          name: idExiste.name,
-          email: idExiste.email,
-          points,
-          avatarUrl: idExiste.avatarUrl,
-        },
-      });
-    }
-
-    if (name || email || avatarUrl || points || password) {
-      await this.prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          name,
-          email,
-          password: passwordHash,
-          avatarUrl,
-          points,
-        },
-      });
-    }
+     }catch(e) {
+      throw new HttpException(e.message,HttpStatus.BAD_REQUEST)
+     }
+    
   }
 
   async getUserOne(userId: string) {
-    const idExiste = await this.prisma.user.findFirst({
-      where: {
-        id: userId,
-      },
-    });
-
-    if (!idExiste) {
-      throw new HttpException("id is ivalid", HttpStatus.BAD_REQUEST);
-    }
-
-    return await this.prisma.user.findFirst({
-      where: {
-        id: idExiste.id,
-      },
-    });
+        try {
+          const idExiste = await this.prisma.user.findFirst({
+            where: {
+              id: userId,
+            },
+          });
+      
+          if (!idExiste) {
+            throw new HttpException("id is ivalid", HttpStatus.BAD_REQUEST);
+          }
+      
+          return await this.prisma.user.findFirst({
+            where: {
+              id: idExiste.id,
+            },
+          });
+        }catch(e) {
+          throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
+        }
   }
 
   async getAll() {
-    return await this.prisma.user.findMany();
+    try {
+      return await this.prisma.user.findMany();
+    }catch(e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+    
   }
 
   async delele(userId: string) {
-    const idExiste = await this.prisma.user.findFirst({
-      where: {
-        id: userId,
-      },
-    });
-
-    return await this.prisma.user.delete({
-      where: {
-        id: idExiste.id,
-      },
-    });
+      try{
+        const idExiste = await this.prisma.user.findFirst({
+          where: {
+            id: userId,
+          },
+        });
+    
+        return await this.prisma.user.delete({
+          where: {
+            id: idExiste.id,
+          },
+        });
+      }catch(e) {
+         throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
+      }
   }
 
   async doneTask(points: number, userId: string) {
-    await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        points,
-      },
-    });
+     try{
+      await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          points,
+        },
+      });
+     }catch(e) {
+       throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
+     }
   }
 
   async auth({ email, password }: AuthDTO) {
-    const Email = await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
-    });
-
-    if (!Email) {
-      
-      throw new HttpException(
-        "email or password incorrect!",
-        HttpStatus.BAD_REQUEST
-      );
-    }
-
-    if (!compare(password, Email.password)) {
-      throw new HttpException(
-        "email or password incorrect!",
-        HttpStatus.BAD_REQUEST
-      );
-    }
-
-    const payload = { sub: Email.id, email: Email.email };
-
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+      try{
+        const Email = await this.prisma.user.findFirst({
+          where: {
+            email,
+          },
+        });
+    
+        if (!Email) {
+          
+          throw new HttpException(
+            "email or password incorrect!",
+            HttpStatus.BAD_REQUEST
+          );
+        }
+    
+        if (!compare(password, Email.password)) {
+          throw new HttpException(
+            "email or password incorrect!",
+            HttpStatus.BAD_REQUEST
+          );
+        }
+    
+        const payload = { sub: Email.id, email: Email.email };
+    
+        return {
+          access_token: await this.jwtService.signAsync(payload),
+        };
+      }catch(e) {
+        throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
+      }
   }
 }

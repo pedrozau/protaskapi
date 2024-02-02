@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDTO } from '../DTO/user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import multer, { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AuthGuard } from './auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -17,6 +18,7 @@ export class UserController {
   }
    
   @Get('account')
+  @UseGuards(AuthGuard)
   async getAll() {
    
      return await this.userService.getAll() 
@@ -24,14 +26,16 @@ export class UserController {
   }
   
   @Get('account/:id')
+  @UseGuards(AuthGuard)
   async getOne(@Param('id')  id: string) {
 
         return await this.userService.getUserOne(id)
 
   }
   
-
+  
   @Put('account/:id')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file',{
     storage: diskStorage({
       destination: './files',
@@ -56,6 +60,15 @@ export class UserController {
 
         },id
       )
+  }
+
+  
+
+  @Post('auth')
+  async signIn(@Body() data: UserDTO) {
+
+    return await this.userService.auth(data)
+
   }
   
 

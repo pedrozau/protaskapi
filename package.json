@@ -20,11 +20,14 @@
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/throttler": "^5.1.1",
     "@prisma/client": "^5.9.0",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",
+    "csurf": "^1.11.0",
     "opts": "^2.0.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"

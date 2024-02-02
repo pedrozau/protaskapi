@@ -6,10 +6,11 @@ import multer, { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from './auth.guard';
 import { AuthDTO } from '../DTO/auth.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 
 @ApiBearerAuth()
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

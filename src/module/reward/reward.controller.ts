@@ -2,10 +2,11 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { RewardService } from './reward.service';
 import { RewardDTO } from '../DTO/reward.dto';
 import { AuthGuard } from '../user/auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 
 @ApiBearerAuth()
+@ApiTags('Reward')
 @Controller('reward')
 export class RewardController {
   constructor(private readonly rewardService: RewardService) {}

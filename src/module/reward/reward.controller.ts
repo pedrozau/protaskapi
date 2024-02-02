@@ -3,6 +3,7 @@ import { RewardService } from './reward.service';
 import { RewardDTO } from '../DTO/reward.dto';
 import { AuthGuard } from '../user/auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AwardDTO } from '../DTO/award.dto';
 
 
 @ApiBearerAuth()
@@ -19,8 +20,8 @@ export class RewardController {
   
   @Post('award')
   @UseGuards(AuthGuard)
-  async  getReward(@Body('rewardId') rewardId: string, @Body('userId') userId: string) {
-     return await this.rewardService.getReward(rewardId, userId)
+  async  getReward(@Body()  data:AwardDTO) {
+     return await this.rewardService.getReward(data.rewardId, data.userId)
   }
 
   @Get(':id')

@@ -18,6 +18,7 @@ export class UserService {
   
   async createAccount({ name, email, password }: UserDTO) {
       try {
+        const avatarURL = "https://cdn.pixabay.com/photo/2020/10/11/19/51/cat-5646889_960_720.jpg"
         const emailExist = await this.prisma.user.findFirst({
           where: {
             email,
@@ -35,6 +36,7 @@ export class UserService {
                 name,
                 email,
                 password: passwordHash,
+                avatarUrl: avatarURL
               },
             });
 

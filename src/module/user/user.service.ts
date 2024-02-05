@@ -215,6 +215,7 @@ export class UserService {
     
         return {
           access_token: await this.jwtService.signAsync(payload),
+          user: Email
         };
       }catch(e) {
         throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)

@@ -7,6 +7,7 @@ import { extname } from 'path';
 import { AuthGuard } from './auth.guard';
 import { AuthDTO } from '../DTO/auth.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CheckTokenDTO } from '../DTO/ckeckToken.dto';
 
 
 @ApiBearerAuth()
@@ -76,5 +77,11 @@ export class UserController {
 
   }
   
+
+
+  async checkToken(@Body('token') token:CheckTokenDTO ) {
+    
+      return this.userService.checkExpirationToken(token)
+  }
 
 }

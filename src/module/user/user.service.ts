@@ -1,9 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserDTO } from "../DTO/user.dto";
 import { compare, hash } from "bcrypt";
 import { AuthDTO } from "../DTO/auth.dto";
 import { JwtService } from "@nestjs/jwt";
+import { CheckTokenDTO } from "../DTO/ckeckToken.dto";
+import { jwtContants } from "./constants";
 
 @Injectable()
 export class UserService {
@@ -221,4 +223,25 @@ export class UserService {
         throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
       }
   }
+
+  async checkExpirationToken({token}:CheckTokenDTO) {
+       
+      try{
+
+          await this.jwtService.verifyAsync(token,{
+          secret: jwtContants.secret
+       })
+
+      }catch(e) {
+         
+         throw new UnauthorizedException()
+
+      }
+      
+       return {
+          access: true
+       }
+
+  }
+
 }

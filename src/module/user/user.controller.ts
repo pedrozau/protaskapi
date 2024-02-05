@@ -78,10 +78,11 @@ export class UserController {
   }
   
 
-
+  @Get('check_expiration_token')
   async checkToken(@Body('token') token:CheckTokenDTO ) {
-    
+
       return this.userService.checkExpirationToken(token)
+
   }
 
 }

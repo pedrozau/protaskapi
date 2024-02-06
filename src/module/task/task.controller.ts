@@ -15,7 +15,12 @@ export class TaskController {
   async getbyid(@Param('id') id: string)  {
     return await this.taskService.getbyid(id)
   }
+  
 
+  @Get('userTask')
+  async getUserTask(@Param('id') id: string) {
+     return this.taskService.getAllTask(id)
+  }
   
   @Post('')
   @UseGuards(AuthGuard)

@@ -26,6 +26,46 @@ export class TaskService {
     }
 
 
+    async getAllTask(userId: string) {
+       
+
+         try {
+          
+            const checkId = await this.db.user.findFirst({
+                 where: {
+                     id: userId
+                 }
+            })
+
+
+            if(!checkId) throw new HttpException('id is invalid!',HttpStatus.BAD_REQUEST);
+                
+          
+           return  await this.db.task.findMany({
+                  where:{
+                     userId: checkId.id
+                  }
+            })
+
+
+            
+
+
+
+
+
+
+
+         }catch(e) {
+
+             throw new HttpException(e.message,HttpStatus.BAD_REQUEST)
+         }
+
+
+    }
+
+
+
     async doneTAsk(done: boolean, taskId: string,level:number,userId: string) {
       
          try{

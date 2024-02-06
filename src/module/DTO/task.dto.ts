@@ -15,10 +15,10 @@ export  class TaskDTO {
         description:'the user done the task',
         default: 1
     })
-    done:boolean;
+    done?:boolean;
     @ApiProperty({
         description:'The userId of the user',
-        default: '1'
+        default: false
     })
     userId:string;
 }

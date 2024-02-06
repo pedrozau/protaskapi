@@ -22,7 +22,7 @@ export class TaskService {
                 data: {
                 task,
                 level: levl,
-                done,
+                done:false,
                 userId
                 }
              })

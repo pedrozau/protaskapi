@@ -16,8 +16,9 @@ export class TaskController {
     return await this.taskService.getbyid(id)
   }
   
+  
 
-  @Get('userTask')
+  @Get('userTask/:id')
   async getUserTask(@Param('id') id: string) {
      return this.taskService.getAllTask(id)
   }

@@ -12,11 +12,19 @@ export class TaskService {
 
 
 
-    async createTask(data:TaskDTO) {
+    async createTask({task,level,done,userId}:TaskDTO) {
+
+            
+           const levl = Number(level)
          
           try{
             return await this.db.task.create({
-                data
+                data: {
+                task,
+                level: levl,
+                done,
+                userId
+                }
              })
 
           }catch(e){

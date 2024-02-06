@@ -8,12 +8,12 @@ export  class TaskDTO {
     task:string;
     @ApiProperty({
         description:'The level of the user',
-        default: 1
+        default: 'run'
     })
     level:number;
     @ApiProperty({
         description:'the user done the task',
-        default: false
+        default: 1
     })
     done:boolean;
     @ApiProperty({

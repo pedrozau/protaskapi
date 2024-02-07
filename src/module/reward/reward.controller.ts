@@ -29,4 +29,9 @@ export class RewardController {
       return await this.rewardService.getById(id)
   }
   
+  @Get('user/:id')
+  async awardUser(@Param('id') id:string) {
+     return this.rewardService.getByUser(id)
+  }
+  
 }

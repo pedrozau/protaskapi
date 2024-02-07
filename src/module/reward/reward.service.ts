@@ -78,6 +78,29 @@ export class RewardService {
             throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
          }
      }
+
+
+     async getByUser(userId: string) {
+        
+          try{
+
+            const  userid = await this.prisma.user.findFirst({
+                where: {
+                     id: userId
+                }
+            })
+
+            return await this.prisma.reward.findMany({
+               where: {
+                userId: userid.id
+               }
+            })
+
+          }catch(e) {
+             throw new HttpException(e.message,HttpStatus.BAD_REQUEST)
+          }
+
+     }
      
 
 }

@@ -246,4 +246,30 @@ export class UserService {
 
   }
 
+
+  async bestUserPoints() {
+      
+     try {
+       
+      return  await this.prisma.user.findMany({
+         select: {
+            points: true,
+            email: true,
+            avatarUrl:true,
+            name:true
+         },
+         orderBy: {
+           points:'desc'
+         }
+      })
+      
+
+     }catch(e) {
+        
+       throw new HttpException(e.message,HttpStatus.BAD_REQUEST)
+
+     }
+
+   }
+
 }

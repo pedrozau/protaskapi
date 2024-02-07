@@ -85,4 +85,9 @@ export class UserController {
 
   }
 
+    @Get('best_user_points')
+    async bestUserPoints() {
+       return this.userService.bestUserPoints()
+    }
+
 }

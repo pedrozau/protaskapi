@@ -12,12 +12,12 @@ export class RewardService {
 
      
      async createReward(d:RewardDTO) {
-
+          
            try{
             return await this.prisma.reward.create({
               data: {
                  award: d.award,
-                 points:d.points,
+                 points:Number(d.points),
                  userId: d.userId
               }
            })

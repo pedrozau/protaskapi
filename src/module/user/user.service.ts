@@ -12,37 +12,37 @@ export class UserService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService
-  ) {}
+  ) { }
 
 
-  
+
   async createAccount({ name, email, password }: UserDTO) {
-      try {
-        const avatarURL = "https://cdn.pixabay.com/photo/2020/10/11/19/51/cat-5646889_960_720.jpg"
-        const emailExist = await this.prisma.user.findFirst({
-          where: {
-            email,
-          },
-        });
-    
-        if (emailExist) {
-          throw new HttpException("user already existe", HttpStatus.BAD_REQUEST);
-        }
-    
-        const passwordHash = await hash(password, 13);
-    
-        return await this.prisma.user.create({
-              data: {
-                name,
-                email,
-                password: passwordHash,
-                avatarUrl: avatarURL
-              },
-            });
+    try {
+      const avatarURL = "https://cdn.pixabay.com/photo/2020/10/11/19/51/cat-5646889_960_720.jpg"
+      const emailExist = await this.prisma.user.findFirst({
+        where: {
+          email,
+        },
+      });
 
-      }catch(e) {
-        throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+      if (emailExist) {
+        throw new HttpException("user already existe", HttpStatus.BAD_REQUEST);
       }
+
+      const passwordHash = await hash(password, 13);
+
+      return await this.prisma.user.create({
+        data: {
+          name,
+          email,
+          password: passwordHash,
+          avatarUrl: avatarURL
+        },
+      });
+
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
   async updateAccount(
@@ -50,18 +50,18 @@ export class UserService {
     userId: string
   ) {
 
-     try {
+    try {
 
       const idExiste = await this.prisma.user.findFirst({
         where: {
           id: userId,
         },
       });
-  
+
       if (!idExiste) {
         throw new HttpException("id is invalid!", HttpStatus.BAD_REQUEST);
       }
-  
+
       if (!password) {
         await this.prisma.user.update({
           where: {
@@ -76,9 +76,9 @@ export class UserService {
           },
         });
       }
-  
+
       const passwordHash = await hash(password, 13);
-  
+
       if (points) {
         await this.prisma.user.update({
           where: {
@@ -106,7 +106,7 @@ export class UserService {
           },
         });
       }
-  
+
       if (name || email || avatarUrl || points || password) {
         await this.prisma.user.update({
           where: {
@@ -122,63 +122,63 @@ export class UserService {
         });
       }
 
-     }catch(e) {
-      throw new HttpException(e.message,HttpStatus.BAD_REQUEST)
-     }
-    
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+    }
+
   }
 
   async getUserOne(userId: string) {
-        try {
-          const idExiste = await this.prisma.user.findFirst({
-            where: {
-              id: userId,
-            },
-          });
-      
-          if (!idExiste) {
-            throw new HttpException("id is ivalid", HttpStatus.BAD_REQUEST);
-          }
-      
-          return await this.prisma.user.findFirst({
-            where: {
-              id: idExiste.id,
-            },
-          });
-        }catch(e) {
-          throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
-        }
+    try {
+      const idExiste = await this.prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (!idExiste) {
+        throw new HttpException("id is ivalid", HttpStatus.BAD_REQUEST);
+      }
+
+      return await this.prisma.user.findFirst({
+        where: {
+          id: idExiste.id,
+        },
+      });
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
   async getAll() {
     try {
       return await this.prisma.user.findMany();
-    }catch(e) {
+    } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
-    
+
   }
 
   async delele(userId: string) {
-      try{
-        const idExiste = await this.prisma.user.findFirst({
-          where: {
-            id: userId,
-          },
-        });
-    
-        return await this.prisma.user.delete({
-          where: {
-            id: idExiste.id,
-          },
-        });
-      }catch(e) {
-         throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
-      }
+    try {
+      const idExiste = await this.prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+      });
+
+      return await this.prisma.user.delete({
+        where: {
+          id: idExiste.id,
+        },
+      });
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
   async doneTask(points: number, userId: string) {
-     try{
+    try {
       await this.prisma.user.update({
         where: {
           id: userId,
@@ -187,89 +187,97 @@ export class UserService {
           points,
         },
       });
-     }catch(e) {
-       throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
-     }
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
   async auth({ email, password }: AuthDTO) {
-      try{
-        const Email = await this.prisma.user.findFirst({
-          where: {
-            email,
-          },
-        });
-    
-        if (!Email) {
-          
-          throw new HttpException(
-            "email or password incorrect!",
-            HttpStatus.BAD_REQUEST
-          );
-        }
-    
-        if (!compare(password, Email.password)) {
-          throw new HttpException(
-            "email or password incorrect!",
-            HttpStatus.BAD_REQUEST
-          );
-        }
-    
+    try {
+      const Email = await this.prisma.user.findFirst({
+        where: {
+          email,
+        },
+      });
+
+      if (!Email) {
+
+        throw new HttpException(
+          "email or password incorrect!",
+          HttpStatus.BAD_REQUEST
+        );
+      }
+
+
+      if (compare(password, Email.password)) {
+
         const payload = { sub: Email.id, email: Email.email };
-    
+
         return {
           access_token: await this.jwtService.signAsync(payload),
           user: Email
         };
-      }catch(e) {
-        throw  new HttpException(e.message,HttpStatus.BAD_REQUEST)
+
+
+      } else {
+
+        throw new HttpException(
+          "email or password incorrect!",
+          HttpStatus.BAD_REQUEST
+        );
+
       }
+
+
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
-  async checkExpirationToken({token}:CheckTokenDTO) {
-       
-      try{
+  async checkExpirationToken({ token }: CheckTokenDTO) {
 
-          await this.jwtService.verifyAsync(token,{
-          secret: jwtContants.secret
-       })
+    try {
 
-      }catch(e) {
-         
-         throw new UnauthorizedException()
+      await this.jwtService.verifyAsync(token, {
+        secret: jwtContants.secret
+      })
 
-      }
-      
-       return {
-          access: true
-       }
+    } catch (e) {
+
+      throw new UnauthorizedException()
+
+    }
+
+    return {
+      access: true
+    }
 
   }
 
 
   async bestUserPoints() {
-      
-     try {
-       
-      return  await this.prisma.user.findMany({
-         select: {
-            points: true,
-            email: true,
-            avatarUrl:true,
-            name:true
-         },
-         orderBy: {
-           points:'desc'
-         }
+
+    try {
+
+      return await this.prisma.user.findMany({
+        select: {
+          points: true,
+          email: true,
+          avatarUrl: true,
+          name: true
+        },
+        orderBy: {
+          points: 'desc'
+        }
       })
-      
 
-     }catch(e) {
-        
-       throw new HttpException(e.message,HttpStatus.BAD_REQUEST)
 
-     }
+    } catch (e) {
 
-   }
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+
+    }
+
+  }
 
 }

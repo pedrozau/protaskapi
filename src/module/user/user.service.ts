@@ -209,23 +209,23 @@ export class UserService {
       }
 
 
-      if (compare(password, Email.password)) {
-
-        const payload = { sub: Email.id, email: Email.email };
-
-        return {
-          access_token: await this.jwtService.signAsync(payload),
-          user: Email
-        };
-
-
-      } else {
+      if (!compare(password, Email.password)) {
 
         throw new HttpException(
           "email or password incorrect!",
           HttpStatus.BAD_REQUEST
         );
 
+
+
+      } else {
+        const payload = { sub: Email.id, email: Email.email };
+
+        return {
+          access_token: await this.jwtService.signAsync(payload),
+          user: Email
+        };
+        
       }
 
 

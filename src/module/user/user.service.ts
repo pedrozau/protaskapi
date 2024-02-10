@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserDTO } from "../DTO/user.dto";
-import { compare, hash } from "bcrypt";
+import { compare, compareSync, hash } from "bcrypt";
 import { AuthDTO } from "../DTO/auth.dto";
 import { JwtService } from "@nestjs/jwt";
 import { CheckTokenDTO } from "../DTO/ckeckToken.dto";
@@ -207,9 +207,10 @@ export class UserService {
           HttpStatus.BAD_REQUEST
         );
       }
-
-
-      if (!compare(password, Email.password)) {
+    
+      const compare_pass =  compareSync(password, Email.password)
+          
+      if (!compare_pass) {
 
         throw new HttpException(
           "email or password incorrect!",

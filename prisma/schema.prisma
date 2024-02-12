@@ -18,6 +18,7 @@ model User {
   password String 
   points Int? @default(0)
   avatarUrl  String?
+  online  Boolean? @default(false)
   createAt DateTime @default(now())
   task Task[]
   reward Reward[]

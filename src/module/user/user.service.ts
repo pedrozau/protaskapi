@@ -296,7 +296,7 @@ export class UserService {
 
          const  checkStatus = await this.prisma.user.update({
             where: {
-               id: userId
+               id: userData.id
             },
             data:{
               email: userData.email,
@@ -305,6 +305,8 @@ export class UserService {
               online: onlineUser
             }
          })
+
+         return checkStatus
 
       }catch(e) {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST)

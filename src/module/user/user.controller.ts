@@ -10,6 +10,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CheckTokenDTO } from '../DTO/ckeckToken.dto';
 
 
+
+
 @ApiBearerAuth()
 @ApiTags('User')
 @Controller('user')
@@ -88,6 +90,14 @@ export class UserController {
     @Get('best_user_points')
     async bestUserPoints() {
        return this.userService.bestUserPoints()
+    }
+   
+    @Put('status/:id')
+    async status(@Param('id') id:string, @Body('online') online:boolean)  {
+         return this.userService.status(
+          id,
+          online
+         )
     }
 
 }

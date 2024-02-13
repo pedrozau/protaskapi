@@ -265,6 +265,7 @@ export class UserService {
           points: true,
           email: true,
           avatarUrl: true,
+          online: true,
           name: true
         },
         orderBy: {

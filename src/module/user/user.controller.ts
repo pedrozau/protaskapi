@@ -92,12 +92,16 @@ export class UserController {
        return this.userService.bestUserPoints()
     }
    
-    @Get('online/:id')
-    async status(@Param('id') id:string ,@Body('online') online:boolean)  {
-         return this.userService.status(
-          id,
-          online
-         )
+    @Put('online/:id')
+    async online(@Param('id') id:string)  {
+         return this.userService.online(id)
     }
+
+    @Put('offline/:id')
+    async offline(@Param('id') id:string) {
+         return this.userService.offline(id)
+    } 
+
+
 
 }

@@ -281,7 +281,7 @@ export class UserService {
 
   }
 
-  async status(userId: string, onlineUser: boolean) {
+  async online(userId: string) {
       try {
 
         const userData =  await this.prisma.user.findFirst({
@@ -293,6 +293,8 @@ export class UserService {
         if(!userData.id) {
           throw new HttpException("Id is invalid!", HttpStatus.BAD_REQUEST)
         }
+
+        const onlineUser = true
 
          const  checkStatus = await this.prisma.user.update({
             where: {
@@ -311,6 +313,40 @@ export class UserService {
       }catch(e) {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
       }
+  }
+
+  async offline(userId: string) {
+    try {
+
+      const userData =  await this.prisma.user.findFirst({
+         where: {
+          id: userId
+         }
+      })
+
+      if(!userData.id) {
+        throw new HttpException("Id is invalid!", HttpStatus.BAD_REQUEST)
+      }
+
+      const onlineUser = false
+
+       const  checkStatus = await this.prisma.user.update({
+          where: {
+             id: userData.id
+          },
+          data:{
+            email: userData.email,
+            name: userData.name,
+            password: userData.password,
+            online: onlineUser
+          }
+       })
+
+       return checkStatus
+
+    }catch(e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
 }

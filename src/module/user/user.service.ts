@@ -31,7 +31,7 @@ export class UserService {
 
       const passwordHash = await hash(password, 13);
 
-      return await this.prisma.user.create({
+      const userData =  await this.prisma.user.create({
         data: {
           name,
           email,
@@ -39,6 +39,13 @@ export class UserService {
           avatarUrl: avatarURL
         },
       });
+
+      const payload = { sub: userData.id, email: email };
+
+      return {
+        access_token: await this.jwtService.signAsync(payload),
+        user: userData
+      };
 
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST)

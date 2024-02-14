@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDTO } from '../DTO/user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -68,6 +68,12 @@ export class UserController {
 
         },id
       )
+  }
+
+
+  @Get('avatar/:fileId')
+  async serveAvatar(@Param('fileId') fileId, @Res() res): Promise<any> {
+    res.sendFile(fileId, { root: 'files'});
   }
 
   
